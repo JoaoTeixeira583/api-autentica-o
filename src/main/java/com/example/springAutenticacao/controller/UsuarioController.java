@@ -12,6 +12,8 @@ import com.example.springAutenticacao.service.UsuarioService;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -56,5 +58,14 @@ public class UsuarioController {
         return ResponseEntity.status(401).build();
       }
     }
+
+    @GetMapping("/perfil")
+    public String buscarPerfil(){
+      String email = SecurityContextHolder.getContext().getAuthentication().getName();
+
+      return "Seu email: " + email;
+
+    }
+
     
 }

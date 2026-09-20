@@ -6,11 +6,20 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.example.springAutenticacao.security.JwtAuthFilter;
 
 
 @Configuration 
 public class SecurityConfig {
     
+    private final JwtAuthFilter jwtAuthFilter;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter){
+           this.jwtAuthFilter = jwtAuthFilter;
+    }
+
     @Bean 
     // Bean pega o objeto retornado e vira gerenciado por spring
     // SecurityFilterChain a sequência de filtros que decide como uma requisição será tratada pela segurança
@@ -25,6 +34,12 @@ public class SecurityConfig {
          httpSecurity.csrf(csrf ->
             csrf.disable()
          );
+
+        //  roda seu jwtAuthFilter antes do filtro padrão de autenticação do Spring
+         httpSecurity.addFilterBefore(
+            jwtAuthFilter, UsernamePasswordAuthenticationFilter.class
+         );
+
         return httpSecurity.build();
     }
 
